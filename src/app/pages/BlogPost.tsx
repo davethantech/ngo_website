@@ -1,18 +1,66 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowLeft, Calendar, User, Tag, Share2 } from 'lucide-react';
-import { blogPostsData } from '../data/mockData';
+import { ArrowLeft, Calendar, User, Share2, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+import { format } from 'date-fns';
+
+interface BlogPost {
+    id: string;
+    title: string;
+    excerpt: string;
+    content: string;
+    image_url: string;
+    author: string;
+    published_at: string;
+}
 
 export function BlogPost() {
     const { id } = useParams<{ id: string }>();
-    const post = blogPostsData.find(p => p.id === id);
+    const [post, setPost] = useState<BlogPost | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchPost() {
+            try {
+                const { data, error } = await supabase
+                    .from('blog_posts')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (error) throw error;
+                if (data) setPost(data as BlogPost);
+            } catch (error) {
+                console.error('Error fetching post:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchPost();
+    }, [id]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+            </div>
+        );
+    }
 
     if (!post) {
-        return <div className="p-20 text-center">Post not found</div>;
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center">
+                <h2 className="text-2xl font-bold mb-4 text-center">Post not found</h2>
+                <Link to="/blog" className="text-emerald-600 hover:underline">
+                    Back to Blog
+                </Link>
+            </div>
+        );
     }
 
     return (
-        <article className="pt-24 pb-16 bg-white min-h-screen">
+        <article className="pt-24 pb-16 bg-white min-h-screen text-left">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Link
                     to="/blog"
@@ -25,14 +73,6 @@ export function BlogPost() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                 >
-                    <div className="flex flex-wrap gap-2 mb-6">
-                        {post.tags.map(tag => (
-                            <span key={tag} className="px-3 py-1 bg-emerald-50 text-emerald-700 text-sm font-medium rounded-full">
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
-
                     <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
                         {post.title}
                     </h1>
@@ -47,7 +87,7 @@ export function BlogPost() {
                             </div>
                             <div className="flex items-center text-sm">
                                 <Calendar className="w-4 h-4 mr-2" />
-                                {post.date}
+                                {post.published_at ? format(new Date(post.published_at), 'MMM d, yyyy') : 'No Date'}
                             </div>
                         </div>
                         <button className="p-2 text-gray-400 hover:text-emerald-600 transition-colors">
@@ -58,11 +98,11 @@ export function BlogPost() {
 
                 {/* Featured Image */}
                 <div className="rounded-2xl overflow-hidden mb-12 shadow-lg">
-                    <img src={post.imageUrl} alt={post.title} className="w-full h-auto object-cover max-h-[500px]" />
+                    <img src={post.image_url} alt={post.title} className="w-full h-auto object-cover max-h-[500px]" />
                 </div>
 
                 {/* Content */}
-                <div className="prose prose-lg prose-emerald max-w-none text-gray-700">
+                <div className="prose prose-lg prose-emerald max-w-none text-gray-700 text-left">
                     {post.content.split('\n').map((paragraph, idx) => (
                         <p key={idx} className="mb-4">{paragraph}</p>
                     ))}

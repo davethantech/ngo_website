@@ -1,14 +1,44 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useInView } from './hooks/use-in-view';
-import { Calendar, Clock, ArrowRight, Tag } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import { format } from 'date-fns';
+import { Calendar, User, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { blogPostsData } from '../data/mockData';
+import { supabase } from '../lib/supabase';
+import { format } from 'date-fns';
+
+interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  image_url: string;
+  published_at: string;
+  author: string;
+}
 
 export function Blog() {
   const [ref, isInView] = useInView({ threshold: 0.1 });
-  const posts = blogPostsData.slice(0, 3); // Latest 3 posts
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .order('published_at', { ascending: false })
+          .limit(3);
+
+        if (error) throw error;
+        if (data) setPosts(data as BlogPost[]);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPosts();
+  }, []);
 
   return (
     <section id="blog" ref={ref} className="py-24 bg-gray-50">
@@ -32,94 +62,59 @@ export function Blog() {
           </p>
         </motion.div>
 
-        {/* Blog Posts Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {posts.map((post, index) => (
-            <motion.article
+        {/* Blog Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {loading ? (
+            Array(3).fill(0).map((_, i) => (
+              <div key={i} className="bg-gray-100 rounded-2xl h-[450px] animate-pulse" />
+            ))
+          ) : posts.map((post, index) => (
+            <motion.div
               key={post.id}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 * index }}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group"
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all border border-gray-100 flex flex-col group"
             >
-              {/* Image */}
               <div className="relative h-56 overflow-hidden">
-                <ImageWithFallback
-                  src={post.imageUrl}
+                <img
+                  src={post.image_url}
                   alt={post.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent" />
-
-                {/* Category Badge */}
-                {post.tags && post.tags.length > 0 && (
-                  <div className="absolute top-4 left-4 px-3 py-1 bg-emerald-600 text-white rounded-full text-xs font-semibold">
-                    {post.tags[0]}
-                  </div>
-                )}
               </div>
 
-              {/* Content */}
-              <div className="p-6">
-                {/* Meta */}
-                <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+              <div className="p-8 flex-grow flex flex-col">
+                <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
                   <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    <span>{post.date}</span>
+                    <Calendar className="w-4 h-4 text-emerald-500" />
+                    <span>
+                      {post.published_at ? format(new Date(post.published_at), 'MMM d, yyyy') : 'No Date'}
+                    </span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>5 min read</span>
+                    <User className="w-4 h-4 text-emerald-500" />
+                    <span>{post.author}</span>
                   </div>
                 </div>
 
-                {/* Title */}
-                <Link to={`/blog/${post.id}`} className="block">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2">
-                    {post.title}
-                  </h3>
-                </Link>
-
-                {/* Excerpt */}
-                <p className="text-gray-600 leading-relaxed mb-4 line-clamp-3">
+                <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-emerald-600 transition-colors line-clamp-2">
+                  {post.title}
+                </h3>
+                <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed">
                   {post.excerpt}
                 </p>
 
-                {/* Tags */}
-                {post.tags && post.tags.length > 0 && (
-                  <div className="flex items-center gap-2 mb-4 flex-wrap">
-                    <Tag className="w-4 h-4 text-gray-400" />
-                    {post.tags.slice(0, 3).map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {/* Author & Read More */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-xs font-bold">
-                      {post.author.charAt(0)}
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">
-                      {post.author}
-                    </span>
-                  </div>
+                <div className="mt-auto">
                   <Link
                     to={`/blog/${post.id}`}
-                    className="text-emerald-600 font-semibold text-sm hover:text-emerald-700 transition-colors flex items-center gap-1"
+                    className="flex items-center gap-2 text-emerald-600 font-bold hover:gap-3 transition-all"
                   >
-                    Read More
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    Read More <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
               </div>
-            </motion.article>
+            </motion.div>
           ))}
         </div>
 
@@ -128,7 +123,7 @@ export function Blog() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center"
+          className="text-center mt-12"
         >
           <Link
             to="/blog"

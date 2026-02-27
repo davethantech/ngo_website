@@ -1,15 +1,40 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { blogPostsData, BlogPost } from '../data/mockData';
 import { Calendar, User, ArrowRight } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { format } from 'date-fns';
+
+interface BlogPost {
+    id: string;
+    title: string;
+    excerpt: string;
+    image_url: string;
+    published_at: string;
+    author: string;
+}
 
 export function BlogPage() {
     const [posts, setPosts] = useState<BlogPost[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Simulate fetch
-        setTimeout(() => setPosts(blogPostsData), 300);
+        async function fetchPosts() {
+            try {
+                const { data, error } = await supabase
+                    .from('blog_posts')
+                    .select('*')
+                    .order('published_at', { ascending: false });
+
+                if (error) throw error;
+                if (data) setPosts(data as BlogPost[]);
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchPosts();
     }, []);
 
     return (
@@ -21,14 +46,18 @@ export function BlogPage() {
                     className="text-center mb-16"
                 >
                     <span className="text-emerald-600 font-semibold tracking-wider text-sm uppercase">Latest Updates</span>
-                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-6">News & Stories</h1>
-                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-6 text-center">News & Stories</h1>
+                    <p className="text-xl text-gray-600 max-w-2xl mx-auto text-center">
                         Stay informed about our latest activities, success stories, and the impact we're making together.
                     </p>
                 </motion.div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {posts.map((post, index) => (
+                    {loading ? (
+                        Array(6).fill(0).map((_, i) => (
+                            <div key={i} className="bg-gray-100 rounded-xl h-96 animate-pulse" />
+                        ))
+                    ) : posts.map((post, index) => (
                         <motion.div
                             key={post.id}
                             initial={{ opacity: 0, y: 20 }}
@@ -38,25 +67,20 @@ export function BlogPage() {
                         >
                             <div className="relative h-64 overflow-hidden">
                                 <img
-                                    src={post.imageUrl}
+                                    src={post.image_url}
                                     alt={post.title}
                                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                                 />
-                                <div className="absolute top-4 left-4">
-                                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs font-bold text-emerald-700 rounded-full shadow-sm">
-                                        {post.tags[0]}
-                                    </span>
-                                </div>
                             </div>
 
-                            <div className="p-6 flex flex-col flex-grow">
+                            <div className="p-6 flex flex-col flex-grow text-left">
                                 <div className="flex items-center text-xs text-gray-500 mb-4 space-x-4">
                                     <span className="flex items-center">
-                                        <Calendar className="w-4 h-4 mr-1" />
-                                        {post.date}
+                                        <Calendar className="w-4 h-4 mr-1 text-emerald-500" />
+                                        {post.published_at ? format(new Date(post.published_at), 'MMM d, yyyy') : 'No Date'}
                                     </span>
                                     <span className="flex items-center">
-                                        <User className="w-4 h-4 mr-1" />
+                                        <User className="w-4 h-4 mr-1 text-emerald-500" />
                                         {post.author}
                                     </span>
                                 </div>
@@ -67,7 +91,7 @@ export function BlogPage() {
                                     </Link>
                                 </h3>
 
-                                <p className="text-gray-600 text-sm line-clamp-3 mb-6 flex-grow">
+                                <p className="text-gray-600 text-sm line-clamp-3 mb-6 flex-grow leading-relaxed">
                                     {post.excerpt}
                                 </p>
 

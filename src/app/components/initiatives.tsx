@@ -1,19 +1,50 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useInView } from './hooks/use-in-view';
-import { GraduationCap, Heart, Droplet, Users } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import { ArrowRight } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { initiativesData } from '../data/mockData';
+import { supabase } from '../lib/supabase';
+
+interface Initiative {
+  id: string;
+  title: string;
+  description: string;
+  image_url: string;
+  status: 'Ongoing' | 'Past' | 'Upcoming';
+  impact: string;
+}
 
 export function Initiatives() {
   const [ref, isInView] = useInView({ threshold: 0.1 });
-  // Use first 2 or 4 initiatives for the homepage preview
-  const initiatives = initiativesData.slice(0, 4);
+  const [initiatives, setInitiatives] = useState<Initiative[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchInitiatives() {
+      try {
+        const { data, error } = await supabase
+          .from('initiatives')
+          .select('*')
+          .eq('status', 'Ongoing')
+          .limit(2); // Preview 2 on homepage
+
+        if (error) throw error;
+        if (data) setInitiatives(data as Initiative[]);
+      } catch (error) {
+        console.error('Error fetching initiatives:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchInitiatives();
+  }, []);
 
   const getIcon = (index: number) => {
-    const icons = [GraduationCap, Heart, Droplet, Users];
-    return icons[index % icons.length];
+    const icons = ['GraduationCap', 'Heart', 'Droplet', 'Users'];
+    const iconName = icons[index % icons.length];
+    const Icon = (LucideIcons as any)[iconName] || LucideIcons.HelpCircle;
+    return Icon;
   };
 
   return (
@@ -40,7 +71,11 @@ export function Initiatives() {
 
         {/* Initiatives Grid */}
         <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {initiatives.map((initiative, index) => {
+          {loading ? (
+            Array(2).fill(0).map((_, i) => (
+              <div key={i} className="bg-gray-100 rounded-2xl h-96 animate-pulse" />
+            ))
+          ) : initiatives.map((initiative, index) => {
             const Icon = getIcon(index);
             return (
               <motion.div
@@ -52,8 +87,8 @@ export function Initiatives() {
               >
                 {/* Image */}
                 <div className="relative h-64 overflow-hidden">
-                  <ImageWithFallback
-                    src={initiative.imageUrl}
+                  <img
+                    src={initiative.image_url}
                     alt={initiative.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
@@ -65,17 +100,19 @@ export function Initiatives() {
                   </div>
 
                   {/* Impact Badge */}
-                  <div className="absolute bottom-4 right-4 px-4 py-2 bg-emerald-600 text-white rounded-full text-sm font-semibold shadow-lg">
-                    {initiative.impact}
-                  </div>
+                  {initiative.impact && (
+                    <div className="absolute bottom-4 right-4 px-4 py-2 bg-emerald-600 text-white rounded-full text-sm font-semibold shadow-lg">
+                      {initiative.impact}
+                    </div>
+                  )}
                 </div>
 
                 {/* Content */}
                 <div className="p-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-1">
                     {initiative.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed mb-4">
+                  <p className="text-gray-600 leading-relaxed mb-4 line-clamp-2">
                     {initiative.description}
                   </p>
                   <Link
@@ -83,19 +120,7 @@ export function Initiatives() {
                     className="inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700 transition-colors gap-2"
                   >
                     Learn More
-                    <svg
-                      className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               </motion.div>

@@ -1,8 +1,9 @@
 import { motion } from 'motion/react';
 import { useInView } from './hooks/use-in-view';
-import { Mail, MapPin, Phone, Send } from 'lucide-react';
+import { Mail, MapPin, Phone, Send, Instagram, Youtube, Facebook, Twitter } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { supabase } from '../lib/supabase';
 
 export function Contact() {
   const [ref, isInView] = useInView({ threshold: 0.1 });
@@ -18,12 +19,21 @@ export function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const { error } = await supabase
+        .from('contact_inquiries')
+        .insert([formData]);
 
-    toast.success('Message sent successfully! We will get back to you soon.');
-    setFormData({ name: '', email: '', subject: '', message: '' });
-    setIsSubmitting(false);
+      if (error) throw error;
+
+      toast.success('Message sent successfully! We will get back to you soon.');
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      toast.error('Failed to send message. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -33,7 +43,7 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" ref={ref} className="py-24 bg-white">
+    <section id="contact" ref={ref} className="py-24 bg-white text-left">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -66,7 +76,7 @@ export function Contact() {
                 Contact Information
               </h3>
               <p className="text-lg text-gray-600 mb-8">
-                Reach out to us through any of the following channels. We're here 
+                Reach out to us through any of the following channels. We're here
                 to answer your questions and help you make a difference.
               </p>
             </div>
@@ -88,8 +98,8 @@ export function Contact() {
                 },
                 {
                   icon: MapPin,
-                  title: 'Office',
-                  value: 'Lagos, Nigeria',
+                  title: 'Offices',
+                  value: 'Maryland, USA | Akure, Nigeria',
                   link: null,
                 },
               ].map((item, index) => (
@@ -126,20 +136,22 @@ export function Contact() {
             <div className="pt-8 border-t border-gray-200">
               <h4 className="font-semibold text-gray-900 mb-4">Follow Us</h4>
               <div className="flex gap-4">
-                {['Facebook', 'Twitter', 'Instagram', 'LinkedIn'].map((social) => (
-                  <button
-                    key={social}
-                    className="w-12 h-12 rounded-full bg-gray-100 hover:bg-emerald-600 hover:text-white transition-all flex items-center justify-center text-gray-600"
-                    aria-label={social}
+                {[
+                  { icon: Facebook, href: '#', label: 'Facebook' },
+                  { icon: Twitter, href: '#', label: 'Twitter' },
+                  { icon: Instagram, href: 'https://www.instagram.com/layeniogunmakinwa.foundation/', label: 'Instagram' },
+                  { icon: Youtube, href: 'https://www.youtube.com/@LayeniOgunmakinwaFoundation', label: 'YouTube' },
+                ].map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 rounded-full bg-white shadow-sm border border-gray-100 hover:bg-emerald-600 hover:text-white transition-all flex items-center justify-center text-gray-600"
+                    aria-label={social.label}
                   >
-                    <svg
-                      className="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  </button>
+                    <social.icon className="w-5 h-5" />
+                  </a>
                 ))}
               </div>
             </div>

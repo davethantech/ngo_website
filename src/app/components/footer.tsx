@@ -1,4 +1,5 @@
-import { Heart } from 'lucide-react';
+import { Heart, Instagram, Youtube, Facebook, Twitter } from 'lucide-react';
+import logo from '../../assets/logo.jpg';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -6,42 +7,50 @@ export function Footer() {
   const footerLinks = {
     'Quick Links': ['Home', 'About Us', 'Initiatives', 'Impact', 'Blog', 'Contact'],
     'Get Involved': ['Donate', 'Volunteer', 'Partner With Us', 'Careers'],
-    'Resources': ['Annual Reports', 'Success Stories', 'FAQs', 'Privacy Policy'],
+    'Resources': ['Annual Reports', 'Success Stories', 'FAQs'],
   };
 
+  const socialLinks = [
+    { icon: Facebook, href: '#', label: 'Facebook' },
+    { icon: Twitter, href: '#', label: 'Twitter' },
+    { icon: Instagram, href: 'https://www.instagram.com/layeniogunmakinwa.foundation/', label: 'Instagram' },
+    { icon: Youtube, href: 'https://www.youtube.com/@LayeniOgunmakinwaFoundation', label: 'YouTube' },
+  ];
+
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-blue-950 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Main Footer Content */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand Section */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-xl">
-                LOF
+          <div className="lg:col-span-1 text-left">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-emerald-500/30">
+                <img src={logo} alt="LOF Logo" className="w-full h-full object-cover" />
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg leading-tight">
+                <span className="font-bold text-lg leading-tight uppercase">
                   Layeni Ogunmakinwa
                 </span>
-                <span className="text-xs text-gray-400">Foundation</span>
+                <span className="text-xs text-emerald-400 font-semibold tracking-widest uppercase">Foundation</span>
               </div>
             </div>
-            <p className="text-gray-400 leading-relaxed mb-6">
-              Empowering communities and transforming lives through sustainable 
-              development programs.
+            <p className="text-gray-300 leading-relaxed mb-8 text-sm">
+              Empowering communities and transforming lives through sustainable
+              development programs focused on health, education, and welfare.
             </p>
-            <div className="flex gap-3">
-              {['Facebook', 'Twitter', 'Instagram', 'LinkedIn'].map((social) => (
-                <button
-                  key={social}
-                  className="w-10 h-10 rounded-full bg-gray-800 hover:bg-emerald-600 transition-colors flex items-center justify-center"
-                  aria-label={social}
+            <div className="flex gap-4">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-blue-900/50 hover:bg-emerald-600 transition-all flex items-center justify-center text-white"
+                  aria-label={social.label}
                 >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                </button>
+                  <social.icon className="w-5 h-5" />
+                </a>
               ))}
             </div>
           </div>

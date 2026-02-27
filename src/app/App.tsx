@@ -11,6 +11,9 @@ import { InitiativesPage } from './pages/InitiativesPage';
 import { InitiativeDetail } from './pages/InitiativeDetail';
 import { BlogPage } from './pages/BlogPage';
 import { BlogPost } from './pages/BlogPost';
+import { CareersPage } from './pages/CareersPage';
+import { FAQPage } from './pages/FAQPage';
+import { VolunteerPage } from './pages/VolunteerPage';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -54,6 +57,9 @@ export default function App() {
           <Route path="/initiatives/:id" element={<InitiativeDetail />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:id" element={<BlogPost />} />
+          <Route path="/careers" element={<CareersPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/volunteer" element={<VolunteerPage />} />
         </Routes>
         <Footer />
         <Toaster position="top-right" richColors />

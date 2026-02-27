@@ -11,25 +11,25 @@ export function About() {
       icon: Target,
       title: 'Our Mission',
       description:
-        'To create sustainable change through education, healthcare, and community development programs that empower individuals and transform communities.',
+        'To improve quality of life through health awareness, social welfare, and initiatives that foster accountability and productivity in the public sector.',
     },
     {
       icon: Eye,
       title: 'Our Vision',
       description:
-        'A world where every individual has access to opportunities for growth, health, and prosperity, regardless of their background or circumstances.',
+        'A world where everyone has access to quality education to alleviate poverty towards the goal of living a successful and meaningful life.',
     },
     {
       icon: Award,
-      title: 'Our Values',
+      title: 'Our Identity',
       description:
-        'Integrity, compassion, excellence, and accountability guide every decision we make and every action we take in service of our communities.',
+        'Established by the children of Late Chief Dr. N.O.I. Ogunmakinwa, we work to assist in promoting healthy living awareness and social welfare services.',
     },
     {
       icon: Globe,
-      title: 'Our Impact',
+      title: 'Equal Value',
       description:
-        'We measure success not in numbers, but in transformed lives, empowered communities, and the sustainable change we create together.',
+        'Bearing in mind the fact that no life has more value than the other, we strive to ensure that all people have access to resources for a better life.',
     },
   ];
 
@@ -46,17 +46,16 @@ export function About() {
           <span className="inline-block px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full font-medium text-sm mb-4">
             About Us
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Building a Better Tomorrow
+          <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
+            Uplifting Lives. Restoring Hope.
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            The Layeni Ogunmakinwa Foundation was founded on the belief that every 
-            person deserves the opportunity to thrive.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
+            Building Futures through compassion, stewardship, and community action.
           </p>
         </motion.div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
+        <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
           {/* Image */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -64,17 +63,17 @@ export function About() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1560220604-1985ebfe28b1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaGFyaXR5JTIwdm9sdW50ZWVycyUyMGhlbHBpbmclMjBjb21tdW5pdHl8ZW58MXx8fHwxNzcwNjI1MzQzfDA&ixlib=rb-4.1.0&q=80&w=1080"
-                alt="Volunteers helping community"
-                className="w-full h-[500px] object-cover"
+                src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                alt="LOF Mission In Action"
+                className="w-full h-[550px] object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/60 to-transparent" />
             </div>
             {/* Decorative element */}
-            <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-emerald-500 rounded-2xl -z-10" />
-            <div className="absolute -top-6 -left-6 w-32 h-32 bg-teal-400 rounded-full -z-10" />
+            <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-emerald-600 rounded-2xl -z-10" />
+            <div className="absolute -top-6 -left-6 w-32 h-32 bg-amber-400 rounded-full -z-10" />
           </motion.div>
 
           {/* Content */}
@@ -82,36 +81,37 @@ export function About() {
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-left"
           >
-            <h3 className="text-3xl font-bold text-gray-900 mb-6">
-              Dedicated to Creating Lasting Change
+            <h3 className="text-3xl font-bold text-blue-900 mb-8">
+              Preamble
             </h3>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              Since our inception, we have been committed to addressing the root causes 
-              of inequality and poverty through sustainable, community-led initiatives. 
-              Our approach combines local knowledge with global best practices to deliver 
-              programs that truly make a difference.
+              At the Layeni Ogunmakinwa Memorial Foundation, we maintain that all individuals share a responsibility to manage the worldâ€™s resources, which are provided for the collective benefit of everyone, irrespective of creed, color, social status, or political affiliation.
             </p>
-            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              We believe in the power of partnership and work closely with communities, 
-              local organizations, and stakeholders to ensure our programs are culturally 
-              appropriate, sustainable, and driven by the needs of those we serve.
+            <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+              Every life holds equal value, though circumstances of birth and fortune often shape individual opportunities. Founded in honor of Chief Dr. N.O.I. Ogunmakinwa by his children, we are dedicated to uplifting the vulnerable, empowering the underserved, and restoring hope where it is most needed.
             </p>
-            <div className="flex items-center gap-4">
-              <div className="flex -space-x-3">
+            <p className="text-lg text-gray-700 mb-10 leading-relaxed font-semibold text-emerald-700 italic">
+              â€œTogether, we can ensure no one is left behind.â€
+            </p>
+            <div className="flex items-center gap-6">
+              <div className="flex -space-x-4">
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 border-2 border-white"
-                  />
+                    className="w-14 h-14 rounded-full bg-emerald-100 border-2 border-white flex items-center justify-center text-emerald-700 font-bold shadow-sm"
+                  >
+                    LOF
+                  </div>
                 ))}
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-base font-bold text-blue-900">
                   Join Our Community
                 </p>
                 <p className="text-sm text-gray-600">
-                  1,000+ volunteers making a difference
+                  Making a difference across USA and Nigeria
                 </p>
               </div>
             </div>

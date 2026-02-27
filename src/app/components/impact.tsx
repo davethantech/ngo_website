@@ -1,48 +1,11 @@
 import { motion } from 'motion/react';
 import { useInView } from './hooks/use-in-view';
 import { Users, MapPin, GraduationCap, Stethoscope, Briefcase, CheckCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ImpactCounter } from './ImpactCounter';
 
 export function Impact() {
   const [ref, isInView] = useInView({ threshold: 0.1 });
-
-  const stats = [
-    {
-      icon: Users,
-      value: '10,000+',
-      label: 'Lives Touched',
-      bgClass: 'from-emerald-500 to-emerald-600'
-    },
-    {
-      icon: MapPin,
-      value: '50+',
-      label: 'Communities',
-      bgClass: 'from-teal-500 to-teal-600'
-    },
-    {
-      icon: GraduationCap,
-      value: '5,000+',
-      label: 'Students Educated',
-      bgClass: 'from-cyan-500 to-cyan-600'
-    },
-    {
-      icon: Stethoscope,
-      value: '15,000+',
-      label: 'Healthcare Visits',
-      bgClass: 'from-rose-500 to-rose-600'
-    },
-    {
-      icon: Briefcase,
-      value: '200+',
-      label: 'Businesses Supported',
-      bgClass: 'from-violet-500 to-violet-600'
-    },
-    {
-      icon: CheckCircle,
-      value: '100+',
-      label: 'Projects Completed',
-      bgClass: 'from-amber-500 to-amber-600'
-    },
-  ];
 
   const testimonials = [
     {
@@ -87,25 +50,9 @@ export function Impact() {
           </p>
         </motion.div>
 
-        {/* Stats Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 * index }}
-              className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all border border-gray-100 group"
-            >
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.bgClass} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                <stat.icon className="w-8 h-8 text-white" />
-              </div>
-              <div className="text-4xl font-bold text-gray-900 mb-2">
-                {stat.value}
-              </div>
-              <div className="text-gray-600 font-medium">{stat.label}</div>
-            </motion.div>
-          ))}
+        {/* Real-time Stats Grid */}
+        <div className="mb-20">
+          <ImpactCounter />
         </div>
 
         {/* Testimonials */}
@@ -168,12 +115,18 @@ export function Impact() {
               that need it most.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <button className="px-8 py-4 bg-white text-emerald-600 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg">
+              <Link
+                to="/volunteer"
+                className="px-8 py-4 bg-white text-emerald-600 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+              >
                 Donate Today
-              </button>
-              <button className="px-8 py-4 bg-emerald-700 text-white rounded-full font-semibold hover:bg-emerald-800 transition-colors border-2 border-white/20">
+              </Link>
+              <Link
+                to="/volunteer"
+                className="px-8 py-4 bg-emerald-700 text-white rounded-full font-semibold hover:bg-emerald-800 transition-colors border-2 border-white/20"
+              >
                 Become a Volunteer
-              </button>
+              </Link>
             </div>
           </div>
         </motion.div>

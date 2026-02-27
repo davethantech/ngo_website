@@ -1,11 +1,52 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowLeft, CheckCircle } from 'lucide-react';
-import { initiativesData } from '../data/mockData';
+import { ArrowLeft, CheckCircle, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+
+interface Initiative {
+    id: string;
+    title: string;
+    description: string;
+    content?: string;
+    image_url: string;
+    status: string;
+    category?: string;
+    impact?: string;
+}
 
 export function InitiativeDetail() {
     const { id } = useParams<{ id: string }>();
-    const initiative = initiativesData.find(i => i.id === id);
+    const [initiative, setInitiative] = useState<Initiative | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchInitiative() {
+            try {
+                const { data, error } = await supabase
+                    .from('initiatives')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (error) throw error;
+                if (data) setInitiative(data as Initiative);
+            } catch (error) {
+                console.error('Error fetching initiative:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchInitiative();
+    }, [id]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+            </div>
+        );
+    }
 
     if (!initiative) {
         return (
@@ -23,7 +64,7 @@ export function InitiativeDetail() {
             {/* Hero Section */}
             <div className="relative h-[60vh] min-h-[400px]">
                 <img
-                    src={initiative.imageUrl}
+                    src={initiative.image_url}
                     alt={initiative.title}
                     className="w-full h-full object-cover"
                 />
@@ -36,13 +77,13 @@ export function InitiativeDetail() {
                             transition={{ duration: 0.5 }}
                         >
                             <span className="inline-block px-4 py-1 bg-emerald-600/80 backdrop-blur-sm rounded-full text-sm font-medium mb-4">
-                                {initiative.category}
+                                {initiative.category || 'Initiative'}
                             </span>
                             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                                 {initiative.title}
                             </h1>
                             <p className="text-xl md:text-2xl text-emerald-50 font-medium">
-                                Target: {initiative.impact}
+                                Status: {initiative.status}
                             </p>
                         </motion.div>
                     </div>
@@ -57,19 +98,19 @@ export function InitiativeDetail() {
                     <ArrowLeft className="w-4 h-4 mr-2" /> Back to Initiatives
                 </Link>
 
-                <div className="prose prose-lg prose-emerald max-w-none">
+                <div className="prose prose-lg prose-emerald max-w-none text-left">
                     <p className="lead text-xl text-gray-700 leading-relaxed mb-8 font-medium">
                         {initiative.description}
                     </p>
 
                     <div className="my-12 p-8 bg-emerald-50 rounded-2xl border border-emerald-100">
-                        <h3 className="text-2xl font-bold text-emerald-900 mb-4">Why this matters</h3>
-                        <p className="text-gray-700">
-                            {initiative.fullContent || initiative.description}
+                        <h3 className="text-2xl font-bold text-emerald-900 mb-4 text-left">The Vision</h3>
+                        <p className="text-gray-700 text-left">
+                            {initiative.content || initiative.description}
                         </p>
                     </div>
 
-                    <h3>Key Objectives</h3>
+                    <h3 className="text-left">Key Objectives</h3>
                     <ul className="grid md:grid-cols-2 gap-4 not-prose mt-6">
                         {['Sustainable Impact', 'Community Led', 'Future Proof', 'Scalable Solutions'].map((item, i) => (
                             <li key={i} className="flex items-center text-gray-700">
