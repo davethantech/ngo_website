@@ -1,7 +1,8 @@
 import { motion } from 'motion/react';
 import { useInView } from './hooks/use-in-view';
-import { Target, Eye, Award, Globe } from 'lucide-react';
+import { Target, Eye, Award, Globe, Heart, Users } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import aboutBg from '../../assets/about.webp';
 
 export function About() {
   const [ref, isInView] = useInView({ threshold: 0.2 });
@@ -65,11 +66,11 @@ export function About() {
           >
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                src={aboutBg}
                 alt="LOF Mission In Action"
                 className="w-full h-[550px] object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/60 to-transparent" />
+              <div className="absolute inset-0 bg-black/5" />
             </div>
             {/* Decorative element */}
             <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-emerald-600 rounded-2xl -z-10" />
@@ -87,22 +88,27 @@ export function About() {
               Preamble
             </h3>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              At the Layeni Ogunmakinwa Memorial Foundation, we maintain that all individuals share a responsibility to manage the worldâ€™s resources, which are provided for the collective benefit of everyone, irrespective of creed, color, social status, or political affiliation.
+              At the Layeni Ogunmakinwa Memorial Foundation, we maintain that all individuals share a responsibility to manage the world's resources, which are provided for the collective benefit of everyone, irrespective of creed, color, social status, or political affiliation.
             </p>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
               Every life holds equal value, though circumstances of birth and fortune often shape individual opportunities. Founded in honor of Chief Dr. N.O.I. Ogunmakinwa by his children, we are dedicated to uplifting the vulnerable, empowering the underserved, and restoring hope where it is most needed.
             </p>
             <p className="text-lg text-gray-700 mb-10 leading-relaxed font-semibold text-emerald-700 italic">
-              â€œTogether, we can ensure no one is left behind.â€
+              "Together, we can ensure no one is left behind."
             </p>
             <div className="flex items-center gap-6">
               <div className="flex -space-x-4">
-                {[1, 2, 3, 4].map((i) => (
+                {[
+                  { icon: Heart, color: 'emerald' },
+                  { icon: Users, color: 'blue' },
+                  { icon: Globe, color: 'teal' },
+                  { icon: Award, color: 'amber' }
+                ].map((item, i) => (
                   <div
                     key={i}
-                    className="w-14 h-14 rounded-full bg-emerald-100 border-2 border-white flex items-center justify-center text-emerald-700 font-bold shadow-sm"
+                    className={`w-14 h-14 rounded-full bg-${item.color}-100 border-2 border-white flex items-center justify-center text-${item.color}-600 shadow-sm`}
                   >
-                    LOF
+                    <item.icon className="w-6 h-6" />
                   </div>
                 ))}
               </div>

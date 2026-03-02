@@ -7,7 +7,7 @@ export function VolunteerPage() {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
-            <section className="relative py-20 flex items-center bg-emerald-900 overflow-hidden">
+            <section className="relative py-15 flex items-center bg-emerald-900 overflow-hidden">
                 {/* Background Image with Overlay */}
                 <div className="absolute inset-0 z-0">
                     <ImageWithFallback

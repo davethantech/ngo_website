@@ -18,6 +18,33 @@ export function BlogPage() {
     const [posts, setPosts] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const fallbackPosts: BlogPost[] = [
+        {
+            id: 'fb1',
+            title: 'Building Resilient Communities Through Education',
+            excerpt: 'Discover how our new scholarship program is transforming lives and creating future leaders in underserved regions.',
+            image_url: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=1000',
+            published_at: new Date().toISOString(),
+            author: 'Admin'
+        },
+        {
+            id: 'fb2',
+            title: 'Clean Water: A Foundation for Health',
+            excerpt: 'Our latest borehole project has brought clean, safe drinking water to over 3,000 community members, reducing water-borne diseases.',
+            image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1000',
+            published_at: new Date().toISOString(),
+            author: 'Admin'
+        },
+        {
+            id: 'fb3',
+            title: 'Empowering Women Entrepreneurs',
+            excerpt: 'Through micro-loans and vocational training, we are helping women build sustainable businesses and support their families.',
+            image_url: 'https://images.unsplash.com/photo-1761370571873-5d869310d731?q=80&w=1000&auto=format&fit=crop',
+            published_at: new Date().toISOString(),
+            author: 'Admin'
+        }
+    ];
+
     useEffect(() => {
         async function fetchPosts() {
             try {
@@ -26,10 +53,18 @@ export function BlogPage() {
                     .select('*')
                     .order('published_at', { ascending: false });
 
-                if (error) throw error;
-                if (data) setPosts(data as BlogPost[]);
-            } catch (error) {
-                console.error('Error fetching posts:', error);
+                if (error) {
+                    setPosts(fallbackPosts);
+                    return;
+                }
+
+                if (data && data.length > 0) {
+                    setPosts(data as BlogPost[]);
+                } else {
+                    setPosts(fallbackPosts);
+                }
+            } catch (err) {
+                setPosts(fallbackPosts);
             } finally {
                 setLoading(false);
             }

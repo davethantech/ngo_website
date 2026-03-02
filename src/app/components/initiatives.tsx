@@ -21,18 +21,44 @@ export function Initiatives() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fallbackInitiatives: Initiative[] = [
+      {
+        id: 'fi1',
+        title: 'Education for All',
+        description: 'Providing scholarships and school supplies to over 5,000 children in underserved communities.',
+        image_url: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80',
+        status: 'Ongoing',
+        impact: '5k+ Students'
+      },
+      {
+        id: 'fi2',
+        title: 'Community Health Outreach',
+        description: 'Bringing medical care and health education to remote villages and urban settlements.',
+        image_url: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80',
+        status: 'Ongoing',
+        impact: '10k+ Treated'
+      }
+    ];
+
     async function fetchInitiatives() {
       try {
         const { data, error } = await supabase
           .from('initiatives')
           .select('*')
           .eq('status', 'Ongoing')
-          .limit(2); // Preview 2 on homepage
+          .limit(2);
 
-        if (error) throw error;
-        if (data) setInitiatives(data as Initiative[]);
-      } catch (error) {
-        console.error('Error fetching initiatives:', error);
+        if (error) {
+          setInitiatives(fallbackInitiatives);
+          return;
+        }
+        if (data && data.length > 0) {
+          setInitiatives(data as Initiative[]);
+        } else {
+          setInitiatives(fallbackInitiatives);
+        }
+      } catch (err) {
+        setInitiatives(fallbackInitiatives);
       } finally {
         setLoading(false);
       }
@@ -75,57 +101,71 @@ export function Initiatives() {
             Array(2).fill(0).map((_, i) => (
               <div key={i} className="bg-gray-100 rounded-2xl h-96 animate-pulse" />
             ))
-          ) : initiatives.map((initiative, index) => {
-            const Icon = getIcon(index);
-            return (
-              <motion.div
-                key={initiative.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.1 * index }}
-                className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
-              >
-                {/* Image */}
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={initiative.image_url}
-                    alt={initiative.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent" />
+          ) : initiatives.length > 0 ? (
+            initiatives.map((initiative, index) => {
+              const Icon = getIcon(index);
+              return (
+                <motion.div
+                  key={initiative.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.1 * index }}
+                  className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
+                >
+                  {/* Image */}
+                  <div className="relative h-64 overflow-hidden">
+                    <img
+                      src={initiative.image_url}
+                      alt={initiative.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent" />
 
-                  {/* Icon Badge */}
-                  <div className="absolute top-4 left-4 w-14 h-14 rounded-xl bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
-                    <Icon className="w-7 h-7 text-emerald-600" />
+                    {/* Icon Badge */}
+                    <div className="absolute top-4 left-4 w-14 h-14 rounded-xl bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                      <Icon className="w-7 h-7 text-emerald-600" />
+                    </div>
+
+                    {/* Impact Badge */}
+                    {initiative.impact && (
+                      <div className="absolute bottom-4 right-4 px-4 py-2 bg-emerald-600 text-white rounded-full text-sm font-semibold shadow-lg">
+                        {initiative.impact}
+                      </div>
+                    )}
                   </div>
 
-                  {/* Impact Badge */}
-                  {initiative.impact && (
-                    <div className="absolute bottom-4 right-4 px-4 py-2 bg-emerald-600 text-white rounded-full text-sm font-semibold shadow-lg">
-                      {initiative.impact}
-                    </div>
-                  )}
+                  {/* Content */}
+                  <div className="p-6">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-1">
+                      {initiative.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed mb-4 line-clamp-2">
+                      {initiative.description}
+                    </p>
+                    <Link
+                      to={`/initiatives/${initiative.id}`}
+                      className="inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700 transition-colors gap-2"
+                    >
+                      Learn More
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
+                </motion.div>
+              );
+            })
+          ) : (
+            <div className="col-span-full py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200 flex flex-center">
+              <div className="text-center max-w-md mx-auto px-4">
+                <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <LucideIcons.Heart className="w-10 h-10 text-emerald-600 animate-pulse" />
                 </div>
-
-                {/* Content */}
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-1">
-                    {initiative.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed mb-4 line-clamp-2">
-                    {initiative.description}
-                  </p>
-                  <Link
-                    to={`/initiatives/${initiative.id}`}
-                    className="inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700 transition-colors gap-2"
-                  >
-                    Learn More
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
-              </motion.div>
-            );
-          })}
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">New Initiatives Coming Soon</h3>
+                <p className="text-gray-600">
+                  We are currently finalizing some exciting new projects. Check back soon or follow our blog for updates.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="text-center">

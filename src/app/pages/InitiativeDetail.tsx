@@ -20,19 +20,59 @@ export function InitiativeDetail() {
     const [initiative, setInitiative] = useState<Initiative | null>(null);
     const [loading, setLoading] = useState(true);
 
+    const fallbackInitiatives: Initiative[] = [
+        {
+            id: 'fi1',
+            title: 'Education for All',
+            description: 'Providing scholarships and school supplies to over 5,000 children in underserved communities.',
+            content: 'Our mission is to ensure that every child, regardless of their background, has access to quality education. We provide comprehensive support including tuition fees, books, uniforms, and mentorship to help students reach their full potential.',
+            image_url: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80',
+            status: 'Ongoing',
+            category: 'Education',
+            impact: '5k+ Students'
+        },
+        {
+            id: 'fi2',
+            title: 'Community Health Outreach',
+            description: 'Bringing medical care and health education to remote villages and urban settlements.',
+            content: 'Global health begins at the community level. Our outreach programs provide primary healthcare services, immunizations, and prenatal care to vulnerable populations who lack access to traditional medical facilities.',
+            image_url: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80',
+            status: 'Ongoing',
+            category: 'Health',
+            impact: '10k+ Treated'
+        }
+    ];
+
     useEffect(() => {
         async function fetchInitiative() {
             try {
+                // Try fetching from Supabase first
                 const { data, error } = await supabase
                     .from('initiatives')
                     .select('*')
                     .eq('id', id)
                     .single();
 
-                if (error) throw error;
+                if (error) {
+                    // Search in fallback data if ID starts with 'fi' or fetch fails
+                    const localFallback = fallbackInitiatives.find(item => item.id === id);
+                    if (localFallback) {
+                        setInitiative(localFallback);
+                    } else {
+                        throw error;
+                    }
+                    return;
+                }
+
                 if (data) setInitiative(data as Initiative);
-            } catch (error) {
-                console.error('Error fetching initiative:', error);
+            } catch (err) {
+                // Final check in local fallbacks before giving up
+                const localFallback = fallbackInitiatives.find(item => item.id === id);
+                if (localFallback) {
+                    setInitiative(localFallback);
+                } else {
+                    console.error('Error fetching initiative:', err);
+                }
             } finally {
                 setLoading(false);
             }

@@ -18,7 +18,7 @@ export function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-30 pb-15 md:pt-30 md:pb-15">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Text Content */}
           <div className="text-white">
@@ -26,10 +26,10 @@ export function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="inline-block px-4 py-2 bg-emerald-600/20 backdrop-blur-sm border border-emerald-500/30 rounded-full mb-10"
+              className="inline-block px-4 py-2 bg-emerald-600/20 backdrop-blur-sm border border-emerald-500/30 rounded-full mb-4"
             >
               <span className="text-emerald-400 font-medium text-sm">
-                Making a Difference Since 2020
+                Making a Difference Since 2015
               </span>
             </motion.div>
 
@@ -88,20 +88,20 @@ export function Hero() {
             {[
               {
                 icon: Users,
-                stat: '10,000+',
-                label: 'Lives Touched',
+                stat: '150,000+',
+                label: 'People Reached',
                 color: 'emerald',
               },
               {
                 icon: Heart,
-                stat: '50+',
+                stat: '500+',
                 label: 'Communities Served',
                 color: 'teal',
               },
               {
                 icon: TrendingUp,
-                stat: '100+',
-                label: 'Projects Completed',
+                stat: '1,200+',
+                label: 'Success Stories',
                 color: 'cyan',
               },
             ].map((item, index) => (

@@ -4,6 +4,7 @@ import { ArrowLeft, Calendar, User, Share2, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 interface BlogPost {
     id: string;
@@ -20,19 +21,86 @@ export function BlogPost() {
     const [post, setPost] = useState<BlogPost | null>(null);
     const [loading, setLoading] = useState(true);
 
+    const fallbackPosts: BlogPost[] = [
+        {
+            id: 'fb1',
+            title: 'Building Resilient Communities Through Education',
+            excerpt: 'Discover how our new scholarship program is transforming lives and creating future leaders in underserved regions.',
+            content: `Education is the most powerful weapon which you can use to change the world. At Layeni Ogunmakinwa Foundation, we believe that every child deserves a chance to learn and grow.\n\nOur recent scholarship program has reached over 500 students across the region, providing them with not just tuition fees, but also mentorship, books, and a safe learning environment. We've seen firsthand how a single scholarship can change the trajectory of a child's life and, subsequently, their entire community.\n\nWe invite you to join us in this mission. Your support can help us reach even more children and build a brighter future for all.`,
+            image_url: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=1200',
+            author: 'Admin',
+            published_at: new Date().toISOString()
+        },
+        {
+            id: 'fb2',
+            title: 'Clean Water: A Foundation for Health',
+            excerpt: 'Our latest borehole project has brought clean, safe drinking water to over 3,000 community members, reducing water-borne diseases.',
+            content: `Access to clean water is a fundamental human right, yet many communities still struggle with water scarcity and contamination. Our Foundation's Clean Water Initiative aims to bridge this gap.\n\nThis month, we celebrated the completion of three borehole projects in the southern districts. These wells now provide safe, reliable drinking water to more than 3,000 residents. The impact is immediate: children are healthier, and families are no longer spending hours trekking to distant, unsafe water sources.\n\nThis is just the beginning. With your continued partnership, we plan to install ten more boreholes by the end of the year.`,
+            image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1200',
+            author: 'Admin',
+            published_at: new Date().toISOString()
+        },
+        {
+            id: 'fb3',
+            title: 'Empowering Women Entrepreneurs',
+            excerpt: 'Through micro-loans and vocational training, we are helping women build sustainable businesses and support their families.',
+            content: `When you empower a woman, you empower a nation. Our Women Empowerment Program is designed to provide underprivileged women with the tools and resources they need to achieve financial independence.\n\nThrough our latest vocational training cycle, forty women have graduated with skills in tailoring, catering, and digital literacy. Each graduate received a small startup grant and ongoing mentorship to help them launch their micro-enterprises.\n\nWe are already seeing incredible results, with several businesses already turning a profit and hiring other local women. Together, we are building a more inclusive and prosperous society.`,
+            image_url: 'https://images.unsplash.com/photo-1761370571873-5d869310d731?q=80&w=1200&auto=format&fit=crop',
+            author: 'Admin',
+            published_at: new Date().toISOString()
+        }
+    ];
+
+    const handleShare = async () => {
+        if (!post) return;
+        const shareData = {
+            title: post.title,
+            text: post.excerpt,
+            url: window.location.href,
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                await navigator.clipboard.writeText(window.location.href);
+                toast.success('Link copied to clipboard!');
+            }
+        } catch (err) {
+            console.error('Error sharing:', err);
+        }
+    };
+
     useEffect(() => {
         async function fetchPost() {
             try {
+                // Try fetching from Supabase first
                 const { data, error } = await supabase
                     .from('blog_posts')
                     .select('*')
                     .eq('id', id)
                     .single();
 
-                if (error) throw error;
+                if (error) {
+                    // Search in fallback data if fetch fails
+                    const localFallback = fallbackPosts.find(item => item.id === id);
+                    if (localFallback) {
+                        setPost(localFallback);
+                    } else {
+                        throw error;
+                    }
+                    return;
+                }
+
                 if (data) setPost(data as BlogPost);
-            } catch (error) {
-                console.error('Error fetching post:', error);
+            } catch (err) {
+                // Final check in local fallbacks before giving up
+                const localFallback = fallbackPosts.find(item => item.id === id);
+                if (localFallback) {
+                    setPost(localFallback);
+                } else {
+                    console.error('Error fetching post:', err);
+                }
             } finally {
                 setLoading(false);
             }
@@ -90,8 +158,12 @@ export function BlogPost() {
                                 {post.published_at ? format(new Date(post.published_at), 'MMM d, yyyy') : 'No Date'}
                             </div>
                         </div>
-                        <button className="p-2 text-gray-400 hover:text-emerald-600 transition-colors">
-                            <Share2 className="w-5 h-5" />
+                        <button
+                            onClick={handleShare}
+                            className="p-3 bg-gray-50 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-full transition-all duration-300 active:scale-95 shadow-sm group"
+                            title="Share story"
+                        >
+                            <Share2 className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                         </button>
                     </div>
                 </motion.div>

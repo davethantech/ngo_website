@@ -1,13 +1,30 @@
 import { Heart, Instagram, Youtube, Facebook, Twitter } from 'lucide-react';
 import logo from '../../assets/logo.jpg';
+import { Link } from 'react-router-dom';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
-    'Quick Links': ['Home', 'About Us', 'Initiatives', 'Impact', 'Blog', 'Contact'],
-    'Get Involved': ['Donate', 'Volunteer', 'Partner With Us', 'Careers'],
-    'Resources': ['Annual Reports', 'Success Stories', 'FAQs'],
+    'Quick Links': [
+      { label: 'Home', path: '/' },
+      { label: 'About Us', path: '/#about' },
+      { label: 'Initiatives', path: '/initiatives' },
+      { label: 'Impact', path: '/#impact' },
+      { label: 'Blog', path: '/blog' },
+      { label: 'Contact', path: '/#contact' }
+    ],
+    'Get Involved': [
+      { label: 'Donate', path: '/#donate' },
+      { label: 'Volunteer', path: '/#volunteer' },
+      { label: 'Partner With Us', path: '/#partner' },
+      { label: 'Careers', path: '/careers' }
+    ],
+    'Resources': [
+      { label: 'Annual Reports', path: '/#reports' },
+      { label: 'Success Stories', path: '/#impact' },
+      { label: 'FAQs', path: '/faq' }
+    ],
   };
 
   const socialLinks = [
@@ -59,12 +76,15 @@ export function Footer() {
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
               <h4 className="font-semibold text-lg mb-4">{title}</h4>
-              <ul className="space-y-3">
+              <ul className="space-y-3 text-left">
                 {links.map((link) => (
-                  <li key={link}>
-                    <button className="text-gray-400 hover:text-emerald-400 transition-colors text-sm">
-                      {link}
-                    </button>
+                  <li key={link.label}>
+                    <Link
+                      to={link.path}
+                      className="text-gray-400 hover:text-emerald-400 transition-colors text-sm block"
+                    >
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -72,25 +92,6 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Newsletter Section */}
-        <div className="border-t border-gray-800 pt-8 mb-8">
-          <div className="max-w-md">
-            <h4 className="font-semibold text-lg mb-2">Stay Updated</h4>
-            <p className="text-gray-400 text-sm mb-4">
-              Subscribe to our newsletter for the latest updates and stories.
-            </p>
-            <div className="flex gap-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-sm"
-              />
-              <button className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-lg font-semibold transition-colors text-sm">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </div>
 
         {/* Bottom Footer */}
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
