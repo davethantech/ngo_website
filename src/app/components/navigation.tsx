@@ -11,7 +11,7 @@ export function Navigation() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const hasHero = ['/', '/volunteer'].includes(location.pathname);
+    const hasHero = ['/', '/volunteer', '/careers', '/faq'].includes(location.pathname);
 
     useEffect(() => {
         const handleScroll = () => {
