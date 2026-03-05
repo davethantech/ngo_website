@@ -1,11 +1,18 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, MessageCircle, Search } from 'lucide-react';
-import { useState } from 'react';
+import { ChevronDown, MessageCircle, Search, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import faqBg from '../../assets/faq-bg.webp';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { supabase } from '../lib/supabase';
 
-const faqs = [
+interface FAQ {
+    category: string;
+    question: string;
+    answer: string;
+}
+
+const fallbackFaqs: FAQ[] = [
     {
         category: 'About Us',
         question: 'What is the Layeni Ogunmakinwa Foundation (LOF)?',
@@ -64,7 +71,7 @@ function FAQItem({ question, answer, category, index, isOpen, onToggle }: { ques
                 className="flex w-full items-start justify-between text-left p-6 gap-4 group"
             >
                 <div className="flex-1">
-                    <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-3 ${categoryColors[category] ?? 'bg-gray-100 text-gray-600'}`}>
+                    <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-3 ${categoryColors[category] ?? 'bg-emerald-50 text-emerald-600'}`}>
                         {category}
                     </span>
                     <p className={`text-lg font-semibold leading-snug transition-colors ${isOpen ? 'text-emerald-700' : 'text-gray-900 group-hover:text-emerald-700'}`}>
@@ -97,12 +104,40 @@ function FAQItem({ question, answer, category, index, isOpen, onToggle }: { ques
 }
 
 export function FAQPage() {
+    const [faqs, setFaqs] = useState<FAQ[]>([]);
+    const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
+    useEffect(() => {
+        document.title = 'Frequently Asked Questions | LOF';
+        async function fetchFaqs() {
+            try {
+                const { data, error } = await supabase
+                    .from('faq_items')
+                    .select('*')
+                    .order('display_order', { ascending: true });
+
+                if (error) throw error;
+                if (data && data.length > 0) {
+                    setFaqs(data);
+                } else {
+                    setFaqs(fallbackFaqs);
+                }
+            } catch (err) {
+                console.error('FAQ fetching error:', err);
+                setFaqs(fallbackFaqs);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchFaqs();
+    }, []);
+
     const filtered = faqs.filter(f =>
         f.question.toLowerCase().includes(search.toLowerCase()) ||
-        f.answer.toLowerCase().includes(search.toLowerCase())
+        f.answer.toLowerCase().includes(search.toLowerCase()) ||
+        f.category.toLowerCase().includes(search.toLowerCase())
     );
 
     const handleToggle = (index: number) => {

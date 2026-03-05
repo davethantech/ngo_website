@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Navigation } from './components/navigation';
 import { Footer } from './components/footer';
-import { AdminPanel } from './components/admin-panel';
 import { Toaster } from 'sonner';
+import { supabase } from './lib/supabase';
 
 // Pages
 import { Home } from './pages/Home';
@@ -14,6 +14,16 @@ import { BlogPost } from './pages/BlogPost';
 import { CareersPage } from './pages/CareersPage';
 import { FAQPage } from './pages/FAQPage';
 import { VolunteerPage } from './pages/VolunteerPage';
+import { LoginPage } from './pages/LoginPage';
+import { AdminRoot } from './components/admin/AdminRoot';
+import { Dashboard } from './components/admin/Dashboard';
+import { Blog } from './components/admin/Blog';
+import { Initiatives } from './components/admin/Initiatives';
+import { Metrics } from './components/admin/Metrics';
+import { FAQ } from './components/admin/FAQ';
+import { Careers } from './components/admin/Careers';
+import { Inbox } from './components/admin/Inbox';
+import { Settings } from './components/admin/Settings';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -23,45 +33,77 @@ function ScrollToTop() {
   return null;
 }
 
-export default function App() {
-  const [showAdmin, setShowAdmin] = useState(false);
+// Simple Auth Guard Component
+function AuthGuard({ children }: { children: React.ReactNode }) {
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Admin hotkey: Alt + A
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.altKey && e.key === 'a') {
-        setShowAdmin(!showAdmin);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [showAdmin]);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
 
-  if (showAdmin) {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (loading) {
     return (
-      <>
-        <AdminPanel onClose={() => setShowAdmin(false)} />
-        <Toaster position="top-right" richColors />
-      </>
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+      </div>
     );
   }
 
+  if (!session) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+export default function App() {
   return (
     <Router>
       <ScrollToTop />
       <div className="min-h-screen bg-white">
-        <Navigation />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/initiatives" element={<InitiativesPage />} />
-          <Route path="/initiatives/:id" element={<InitiativeDetail />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/blog/:id" element={<BlogPost />} />
-          <Route path="/careers" element={<CareersPage />} />
-          <Route path="/faq" element={<FAQPage />} />
-          <Route path="/volunteer" element={<VolunteerPage />} />
+          {/* Public Routes with Layout */}
+          <Route path="/" element={<><Navigation /><Home /><Footer /></>} />
+          <Route path="/initiatives" element={<><Navigation /><InitiativesPage /><Footer /></>} />
+          <Route path="/initiatives/:id" element={<><Navigation /><InitiativeDetail /><Footer /></>} />
+          <Route path="/blog" element={<><Navigation /><BlogPage /><Footer /></>} />
+          <Route path="/blog/:id" element={<><Navigation /><BlogPost /><Footer /></>} />
+          <Route path="/careers" element={<><Navigation /><CareersPage /><Footer /></>} />
+          <Route path="/faq" element={<><Navigation /><FAQPage /><Footer /></>} />
+          <Route path="/volunteer" element={<><Navigation /><VolunteerPage /><Footer /></>} />
+
+          {/* Auth Routes */}
+          <Route path="/login" element={<LoginPage />} />
+
+          {/* Protected Admin Routes */}
+          <Route
+            path="/admin"
+            element={
+              <AuthGuard>
+                <AdminRoot />
+              </AuthGuard>
+            }
+          >
+            <Route index element={<Dashboard />} />
+            <Route path="blog" element={<Blog />} />
+            <Route path="initiatives" element={<Initiatives />} />
+            <Route path="metrics" element={<Metrics />} />
+            <Route path="faq" element={<FAQ />} />
+            <Route path="careers" element={<Careers />} />
+            <Route path="inbox" element={<Inbox />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
         </Routes>
-        <Footer />
         <Toaster position="top-right" richColors />
       </div>
     </Router>

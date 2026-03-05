@@ -143,21 +143,31 @@ export function InitiativeDetail() {
                         {initiative.description}
                     </p>
 
-                    <div className="my-12 p-8 bg-emerald-50 rounded-2xl border border-emerald-100">
-                        <h3 className="text-2xl font-bold text-emerald-900 mb-4 text-left">The Vision</h3>
-                        <p className="text-gray-700 text-left">
-                            {initiative.content || initiative.description}
-                        </p>
-                    </div>
+                    {initiative.content && initiative.content !== initiative.description && (
+                        <div className="my-12 p-8 bg-emerald-50 rounded-2xl border border-emerald-100">
+                            <h3 className="text-2xl font-bold text-emerald-900 mb-4 text-left">The Vision</h3>
+                            <p className="text-gray-700 text-left whitespace-pre-wrap">
+                                {initiative.content}
+                            </p>
+                        </div>
+                    )}
 
                     <h3 className="text-left">Key Objectives</h3>
                     <ul className="grid md:grid-cols-2 gap-4 not-prose mt-6">
-                        {['Sustainable Impact', 'Community Led', 'Future Proof', 'Scalable Solutions'].map((item, i) => (
-                            <li key={i} className="flex items-center text-gray-700">
-                                <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />
-                                {item}
-                            </li>
-                        ))}
+                        {(() => {
+                            const raw = (initiative as any).key_objectives;
+                            const items: string[] = Array.isArray(raw)
+                                ? raw
+                                : raw
+                                    ? String(raw).split(',').map((s: string) => s.trim()).filter(Boolean)
+                                    : ['Sustainable Impact', 'Community Led', 'Future Proof', 'Scalable Solutions'];
+                            return items.map((item, i) => (
+                                <li key={i} className="flex items-center text-gray-700">
+                                    <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />
+                                    {item}
+                                </li>
+                            ));
+                        })()}
                     </ul>
                 </div>
             </div>

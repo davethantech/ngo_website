@@ -1,37 +1,80 @@
 import { motion } from 'motion/react';
-import { Briefcase, MapPin, Clock, ArrowRight, Heart, Trophy, Zap, Users as UsersIcon } from 'lucide-react';
+import { Briefcase, MapPin, Clock, ArrowRight, Heart, Trophy, Zap, Users as UsersIcon, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import careerBg from '../../assets/career-bg.webp';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { supabase } from '../lib/supabase';
 
-const jobs = [
+interface Job {
+    id: string;
+    title: string;
+    location: string;
+    type: string;
+    department: string;
+    description: string;
+    is_active: boolean;
+}
+
+const fallbackJobs: Job[] = [
     {
-        id: 1,
+        id: '1',
         title: 'Program Manager',
         location: 'Lagos, Nigeria',
         type: 'Full-time',
         department: 'Operations',
         description: 'Lead and manage our community-based initiatives and ensure impactful delivery of programs.',
+        is_active: true
     },
     {
-        id: 2,
+        id: '2',
         title: 'Volunteer Coordinator',
         location: 'Remote / Lagos',
         type: 'Part-time',
         department: 'Community Engagement',
         description: 'Engage and coordinate our global network of volunteers for various foundation projects.',
+        is_active: true
     },
     {
-        id: 3,
+        id: '3',
         title: 'Development Officer',
         location: 'Lagos, Nigeria',
         type: 'Full-time',
         department: 'Fundraising',
         description: 'Drive fundraising efforts and manage donor relationships to support our ongoing missions.',
+        is_active: true
     },
 ];
 
 export function CareersPage() {
+    const [jobs, setJobs] = useState<Job[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        document.title = 'Join Our Team | Careers | Layeni Ogunmakinwa Foundation';
+        async function fetchJobs() {
+            try {
+                const { data, error } = await supabase
+                    .from('careers')
+                    .select('*')
+                    .eq('is_active', true)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                if (data && data.length > 0) {
+                    setJobs(data);
+                } else {
+                    setJobs(fallbackJobs);
+                }
+            } catch (err) {
+                console.error('Careers fetching error:', err);
+                setJobs(fallbackJobs);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchJobs();
+    }, []);
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
@@ -131,13 +174,17 @@ export function CareersPage() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between mb-12">
                         <h2 className="text-3xl font-bold text-gray-900">Open Positions</h2>
-                        <span className="text-sm font-medium text-emerald-600 bg-emerald-50 px-4 py-2 rounded-full border border-emerald-100">
-                            {jobs.length} Opportunities
+                        <span className="text-sm font-medium text-emerald-600 bg-emerald-50 px-4 py-2 rounded-full border border-emerald-100 uppercase tracking-wider">
+                            {loading ? '...' : `${jobs.length} Opportunities`}
                         </span>
                     </div>
 
                     <div className="grid gap-6 text-left">
-                        {jobs.map((job, index) => (
+                        {loading ? (
+                            <div className="flex justify-center py-20">
+                                <Loader2 className="w-12 h-12 text-emerald-500 animate-spin" />
+                            </div>
+                        ) : jobs.length > 0 ? jobs.map((job, index) => (
                             <motion.div
                                 key={job.id}
                                 initial={{ opacity: 0, y: 20 }}
@@ -186,7 +233,13 @@ export function CareersPage() {
                                     </div>
                                 </div>
                             </motion.div>
-                        ))}
+                        )) : (
+                            <div className="text-center py-20 bg-white rounded-3xl border border-gray-100">
+                                <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                                <p className="text-lg text-gray-500 font-medium">No open positions at the moment.</p>
+                                <p className="text-sm text-gray-400 mt-2">Check back later or join our talent pool.</p>
+                            </div>
+                        )}
                     </div>
 
                     <motion.div

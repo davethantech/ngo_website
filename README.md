@@ -12,47 +12,41 @@ A premium NGO website with full CMS capabilities for managing blog posts and ini
 - **Blog**: Latest news and stories with featured posts
 - **Contact**: Contact form and information
 
-### Admin Panel (CMS)
-The website includes a powerful admin panel for managing content without code.
+### Admin Portal
+The website includes a secure, formal [Management Console](file:///c:/Users/Lannister/Desktop/NGO_Website/src/app/pages/LoginPage.tsx) for managing content.
 
 #### Accessing the Admin Panel
-Press **Alt + A** anywhere on the website to toggle the admin panel.
+1. Navigate to `/admin` or `/login`.
+2. Authenticate using your Foundation administrator credentials.
+3. Once logged in, you can manage all dynamic content, update security settings, and view user submissions.
 
 #### Admin Panel Features
 1. **Blog Posts Management**
-   - Create, edit, and delete blog posts
-   - Add featured images
-   - Organize with categories and tags
-   - Set author information
-   - Rich content editing
+   - Professional CRUD operations with rich-text support.
+   - Categories, tags, and featured author metadata.
+   - Secure image integration.
 
-2. **Initiatives Management**
-   - Create and manage initiative programs
-   - Upload initiative images
-   - Track impact metrics
-   - Update descriptions
+2. **Initiatives & Programs**
+   - Manage foundation programs and real-time impact metrics.
+   - High-quality image support for program showcases.
 
-3. **Image Upload**
-   - Secure image storage via Supabase
-   - Automatic image optimization
-   - Direct upload from admin panel
+3. **Global Settings**
+   - Built-in credentials management (Password update module).
+   - Secure session termination (Log out).
 
-## Technology Stack
+## Technology Stack & Security
 
-- **Frontend**: React 18 with TypeScript
-- **Styling**: Tailwind CSS v4
-- **Animations**: Motion (Framer Motion)
-- **Backend**: Supabase Edge Functions (Hono server)
-- **Database**: Supabase KV Store
-- **Storage**: Supabase Storage for images
-- **Icons**: Lucide React
-- **Notifications**: Sonner
+- **Frontend**: React 18 with TypeScript.
+- **Security**: Supabase Authentication with protected `AuthGuard` routing.
+- **Database**: Supabase PostgreSQL with strict Row Level Security (RLS).
+- **SEO**: Comprehensive Meta tags, OpenGraph, and dynamic page titles for social sharing.
+- **Animations**: Motion (Framer Motion) for a premium, high-end feel.
 
 ## Running Locally
 
 To run this project on your local machine:
 
-1.  **Clone the repository** (if applicable).
+1.  **Clone the repository**.
 2.  **Install Dependencies**:
     ```bash
     npm install
@@ -61,37 +55,12 @@ To run this project on your local machine:
     ```bash
     npm run dev
     ```
-4.  **Open Browser**: Visit `http://localhost:5173`.
-
-## Getting Started
-
-1. The website is fully functional with demo content
-2. Press **Alt + A** to access the admin panel
-3. Create your own blog posts and initiatives
-4. All changes are persisted in the Supabase database
+4.  **Access**: Visit `http://localhost:5173`. Navigate to `/login` to access the CMS.
 
 ## Contact Information
 
 - **Organization**: Layeni Ogunmakinwa Foundation
 - **Email**: lof.us.ng@gmail.com
-
-## Admin Panel Shortcuts
-
-- **Alt + A**: Toggle admin panel
-- Admin panel includes full CRUD operations for:
-  - Blog posts
-  - Initiatives
-  - Image uploads
-
-## Design Features
-
-- Premium, professional design optimized for NGOs
-- Fully responsive across all devices
-- Smooth scroll animations
-- Interactive hover effects
-- Gradient accents and modern UI
-- Accessibility-focused
-- Performance optimized
 
 ---
 

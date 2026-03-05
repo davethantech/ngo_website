@@ -26,18 +26,16 @@ export function ImpactCounter() {
                 const { data, error } = await supabase
                     .from('impact_metrics')
                     .select('*')
-                    .order('created_at', { ascending: true });
+                    .order('display_order', { ascending: true });
 
-                if (error) {
-                    setMetrics(fallbackMetrics);
-                    return;
-                }
+                if (error) throw error;
                 if (data && data.length > 0) {
                     setMetrics(data);
                 } else {
                     setMetrics(fallbackMetrics);
                 }
             } catch (err) {
+                console.error('Metrics fetching error:', err);
                 setMetrics(fallbackMetrics);
             } finally {
                 setLoading(false);
@@ -46,7 +44,6 @@ export function ImpactCounter() {
 
         fetchMetrics();
 
-        // Real-time subscription (only attempted if CMS is likely available)
         const subscription = supabase
             .channel('impact_metrics_changes')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'impact_metrics' }, () => {
@@ -54,7 +51,6 @@ export function ImpactCounter() {
             })
             .subscribe((status) => {
                 if (status === 'CHANNEL_ERROR') {
-                    // Subscription failed, likely table doesn't exist yet. Quietly ignore.
                     subscription.unsubscribe();
                 }
             });

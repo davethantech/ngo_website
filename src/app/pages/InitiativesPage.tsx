@@ -21,6 +21,7 @@ export function InitiativesPage() {
     const [activeFilter, setActiveFilter] = useState('All');
 
     useEffect(() => {
+        document.title = 'Our Initiatives | Layeni Ogunmakinwa Foundation';
         const fallbackInitiatives: Initiative[] = [
             {
                 id: 'fi1',
@@ -67,17 +68,20 @@ export function InitiativesPage() {
                     .select('*')
                     .order('created_at', { ascending: false });
 
-                if (error) {
-                    setInitiatives(fallbackInitiatives);
-                    return;
-                }
+                if (error) throw error;
 
                 if (data && data.length > 0) {
-                    setInitiatives(data as Initiative[]);
+                    // Map impact_summary from DB to the component's 'impact' interface
+                    const mappedData = data.map(item => ({
+                        ...item,
+                        impact: item.impact_summary || 'Making Impact'
+                    }));
+                    setInitiatives(mappedData as Initiative[]);
                 } else {
                     setInitiatives(fallbackInitiatives);
                 }
             } catch (err) {
+                console.error('Initiatives fetching error:', err);
                 setInitiatives(fallbackInitiatives);
             } finally {
                 setLoading(false);

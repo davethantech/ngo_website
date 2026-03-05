@@ -53,7 +53,11 @@ export function Initiatives() {
           return;
         }
         if (data && data.length > 0) {
-          setInitiatives(data as Initiative[]);
+          const mapped = data.map((item: any) => ({
+            ...item,
+            impact: item.impact_summary || item.impact || 'Making Impact'
+          }));
+          setInitiatives(mapped as Initiative[]);
         } else {
           setInitiatives(fallbackInitiatives);
         }
