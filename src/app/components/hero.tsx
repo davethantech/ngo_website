@@ -39,7 +39,7 @@ export function Hero() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)]"
             >
-              Empowering Communities,{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-400">Empowering Communities,{' '}</span>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">
                 Transforming Lives
               </span>
