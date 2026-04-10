@@ -36,7 +36,8 @@ export function Metrics() {
         label: '',
         value: '',
         icon_name: 'Users',
-        display_order: 0
+        display_order: 0,
+        is_featured: false
     });
 
     const [storyData, setStoryData] = useState({
@@ -84,7 +85,8 @@ export function Metrics() {
                     label: item.label,
                     value: item.value,
                     icon_name: item.icon_name || 'Users',
-                    display_order: item.display_order
+                    display_order: item.display_order,
+                    is_featured: item.is_featured || false
                 });
             } else {
                 setStoryData({
@@ -102,7 +104,8 @@ export function Metrics() {
                     label: '',
                     value: '',
                     icon_name: 'Users',
-                    display_order: metrics.length
+                    display_order: metrics.length + 1,
+                    is_featured: false
                 });
             } else {
                 setStoryData({
@@ -427,6 +430,16 @@ export function Metrics() {
                                                         onChange={(e) => setMetricData({ ...metricData, display_order: parseInt(e.target.value) })}
                                                         className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white outline-none font-mono"
                                                     />
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all group" onClick={() => setMetricData({ ...metricData, is_featured: !metricData.is_featured })}>
+                                                <div className={`w-10 h-6 rounded-full relative transition-colors ${metricData.is_featured ? 'bg-emerald-500' : 'bg-white/10'}`}>
+                                                    <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${metricData.is_featured ? 'translate-x-4' : 'translate-x-0'}`} />
+                                                </div>
+                                                <div className="text-left">
+                                                    <p className="text-sm font-bold text-white">Feature on Homepage</p>
+                                                    <p className="text-[10px] text-gray-500">Displays this metric in the top stats on the Hero section (max 3 recommended).</p>
                                                 </div>
                                             </div>
 

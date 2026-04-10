@@ -73,13 +73,6 @@ export function LoginPage() {
                         <div>
                             <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 ml-1 flex justify-between items-center">
                                 <span>Email Address</span>
-                                <button
-                                    type="button"
-                                    onClick={() => { setEmail('admin@lof.org'); setPassword('123456789'); }}
-                                    className="text-emerald-500 hover:text-emerald-400 normal-case tracking-normal transition-colors font-medium"
-                                >
-                                    Use Demo Account
-                                </button>
                             </label>
                             <div className="relative group/input">
                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within/input:text-emerald-500 transition-colors">
@@ -91,7 +84,7 @@ export function LoginPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="w-full pl-12 pr-4 py-4 bg-gray-800/50 border border-gray-700 rounded-2xl text-white outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/5 transition-all"
-                                    placeholder="admin@lof.org"
+                                    placeholder="www.example.com"
                                 />
                             </div>
                         </div>

@@ -1,10 +1,74 @@
 import { motion } from 'motion/react';
-import { ArrowRight, Heart, Users, TrendingUp } from 'lucide-react';
+import { ArrowRight, HelpCircle } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import heroBg from '../../assets/hero-bg.webp';
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+
+interface FeaturedMetric {
+  id: string;
+  label: string;
+  value: string;
+  icon_name: string;
+}
 
 export function Hero() {
+  const [metrics, setMetrics] = useState<FeaturedMetric[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fallbackMetrics: FeaturedMetric[] = [
+    { id: 'm1', label: 'People Reached', value: '150,000+', icon_name: 'Users' },
+    { id: 'm2', label: 'Communities Served', value: '500+', icon_name: 'Heart' },
+    { id: 'm3', label: 'Success Stories', value: '1,200+', icon_name: 'TrendingUp' },
+  ];
+
+  useEffect(() => {
+    async function fetchFeaturedMetrics() {
+      try {
+        const { data, error } = await supabase
+          .from('impact_metrics')
+          .select('*')
+          .eq('is_featured', true)
+          .order('display_order', { ascending: true })
+          .limit(3);
+
+        if (error) throw error;
+        if (data && data.length > 0) {
+          setMetrics(data);
+        } else {
+          // If no featured, just take top 3 by order
+          const { data: fallbackData } = await supabase
+            .from('impact_metrics')
+            .select('*')
+            .order('display_order', { ascending: true })
+            .limit(3);
+          setMetrics(fallbackData && fallbackData.length > 0 ? fallbackData : fallbackMetrics);
+        }
+      } catch (err) {
+        console.error('Hero metrics fetch error:', err);
+        setMetrics(fallbackMetrics);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchFeaturedMetrics();
+
+    // Real-time subscription for instant hero updates
+    const channel = supabase
+      .channel('hero_metrics_sync')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'impact_metrics' }, () => {
+        fetchFeaturedMetrics();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   return (
     <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image with Overlay */}
@@ -85,46 +149,38 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="grid grid-cols-1 gap-4"
           >
-            {[
-              {
-                icon: Users,
-                stat: '150,000+',
-                label: 'People Reached',
-                color: 'emerald',
-              },
-              {
-                icon: Heart,
-                stat: '500+',
-                label: 'Communities Served',
-                color: 'teal',
-              },
-              {
-                icon: TrendingUp,
-                stat: '1,200+',
-                label: 'Success Stories',
-                color: 'cyan',
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 lg:p-5 hover:bg-white/15 transition-all group"
-              >
-                <div className="flex items-center gap-4">
-                  <div className={`p-3 rounded-xl bg-${item.color}-500/20`}>
-                    <item.icon className={`w-8 h-8 text-${item.color}-400`} />
-                  </div>
-                  <div>
-                    <div className="text-3xl font-bold text-white mb-1">
-                      {item.stat}
+            {loading ? (
+              // Skeleton UI
+              [1, 2, 3].map((i) => (
+                <div key={i} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 animate-pulse h-[100px]" />
+              ))
+            ) : metrics.map((item, index) => {
+              const Icon = (LucideIcons as any)[item.icon_name] || HelpCircle;
+              const colors = ['emerald', 'teal', 'cyan'];
+              const color = colors[index % colors.length];
+
+              return (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+                  className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 lg:p-5 hover:bg-white/15 transition-all group"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`p-3 rounded-xl bg-white/10 group-hover:bg-white/20 transition-colors`}>
+                      <Icon className={`w-8 h-8 text-emerald-400`} />
                     </div>
-                    <div className="text-gray-300 text-sm">{item.label}</div>
+                    <div>
+                      <div className="text-3xl font-bold text-white mb-1">
+                        {item.value}
+                      </div>
+                      <div className="text-gray-300 text-sm">{item.label}</div>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </div>
