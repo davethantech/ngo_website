@@ -1,7 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
@@ -15,18 +12,23 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function keepAlive() {
     console.log('Sending Keep-Alive request to Supabase...');
-    const { data, error } = await supabase
-        .from('impact_metrics')
-        .select('id')
-        .limit(1);
+    try {
+        const { error } = await supabase
+            .from('impact_metrics')
+            .select('id')
+            .limit(1);
 
-    if (error) {
-        console.error('Keep-Alive Error:', error.message);
-    } else {
-        console.log('Keep-Alive Success: Connection active.');
+        if (error) {
+            console.error('Keep-Alive Error:', error.message);
+            process.exit(1);
+        } else {
+            console.log('Keep-Alive Success: Connection active.');
+            process.exit(0);
+        }
+    } catch (err: any) {
+        console.error('Keep-Alive Fatal Error:', err.message);
+        process.exit(1);
     }
 }
 
-// Run every 6 days (Supabase pauses after 7 days of inactivity)
 keepAlive();
-setInterval(keepAlive, 1000 * 60 * 60 * 24 * 6);
