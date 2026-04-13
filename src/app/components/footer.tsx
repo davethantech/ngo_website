@@ -28,9 +28,9 @@ export function Footer() {
   };
 
   const socialLinks = [
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Instagram, href: 'https://www.instagram.com/layeniogunmakinwa.foundation/', label: 'Instagram' },
+    { icon: Facebook, href: 'https://www.facebook.com/share/14bQSyenik8/?mibextid=wwXIfr', label: 'Facebook' },
+    // { icon: Twitter, href: '#', label: 'Twitter' },
+    { icon: Instagram, href: 'https://www.instagram.com/lof_foundation?igsh=MTBkYnRsbDRldHY5bw==&utm_source=ig_contact_invite', label: 'Instagram' },
     { icon: Youtube, href: 'https://www.youtube.com/@LayeniOgunmakinwaFoundation', label: 'YouTube' },
   ];
 
