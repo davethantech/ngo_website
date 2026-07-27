@@ -3,6 +3,10 @@
 @import './theme.css';
 
 /* Custom NGO Website Styles */
+html, body {
+  overflow-x: hidden;
+}
+
 html {
   scroll-behavior: smooth;
 }

@@ -15,6 +15,7 @@ export function Footer() {
       { label: 'Contact', path: '/#contact' }
     ],
     'Get Involved': [
+      { label: 'Register as Beneficiary', path: '/register' },
       { label: 'Donate', path: '/#donate' },
       { label: 'Volunteer', path: '/#volunteer' },
       { label: 'Partner With Us', path: '/#partner' },
@@ -63,7 +64,7 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-blue-900/50 hover:bg-emerald-600 transition-all flex items-center justify-center text-white"
+                  className="w-10 h-10 rounded-full bg-blue-900/50 hover:bg-emerald-700 transition-all flex items-center justify-center text-white"
                   aria-label={social.label}
                 >
                   <social.icon className="w-5 h-5" />

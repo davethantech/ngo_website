@@ -160,7 +160,7 @@ export function Contact() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 rounded-full bg-white shadow-sm border border-gray-100 hover:bg-emerald-600 hover:text-white transition-all flex items-center justify-center text-gray-600"
+                    className="w-12 h-12 rounded-full bg-white shadow-sm border border-gray-100 hover:bg-emerald-700 hover:text-white transition-all flex items-center justify-center text-gray-600"
                     aria-label={social.label}
                   >
                     <social.icon className="w-5 h-5" />

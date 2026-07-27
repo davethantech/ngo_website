@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import * as LucideIcons from 'lucide-react';
+import { getIcon, BarChart3 } from '../lib/icons';
 import { motion } from 'motion/react';
 
 interface ImpactMetric {
@@ -73,7 +73,7 @@ export function ImpactCounter() {
             <div className="py-16 bg-white rounded-2xl border-2 border-dashed border-gray-100 flex items-center justify-center">
                 <div className="text-center">
                     <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <LucideIcons.BarChart3 className="w-8 h-8 text-emerald-500 animate-pulse" />
+                        <BarChart3 className="w-8 h-8 text-emerald-500 animate-pulse" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-1">Measuring Our Impact...</h3>
                     <p className="text-gray-500">Real-time statistics are currently being updated.</p>
@@ -85,7 +85,7 @@ export function ImpactCounter() {
     return (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {metrics.map((metric, index) => {
-                const Icon = (LucideIcons as any)[metric.icon_name] || LucideIcons.HelpCircle;
+                const Icon = getIcon(metric.icon_name);
 
                 return (
                     <motion.div

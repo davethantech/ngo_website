@@ -225,7 +225,7 @@ export function CareersPage() {
                                     <div className="flex flex-row lg:flex-col gap-4 items-center justify-end">
                                         <Link
                                             to="/#contact"
-                                            className="px-8 py-4 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition-all hover:shadow-lg hover:shadow-emerald-200 flex items-center justify-center gap-2 group-hover:px-10"
+                                            className="px-8 py-4 bg-emerald-700 text-white rounded-2xl font-bold hover:bg-emerald-700 transition-all hover:shadow-lg hover:shadow-emerald-200 flex items-center justify-center gap-2 group-hover:px-10"
                                         >
                                             Apply Now
                                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
+import { ArrowRight, SearchX } from 'lucide-react';
+import { getIcon } from '../lib/icons';
 import { supabase } from '../lib/supabase';
 
 interface Initiative {
@@ -116,7 +116,7 @@ export function InitiativesPage() {
                             key={status}
                             onClick={() => setActiveFilter(status)}
                             className={`px-6 py-2 rounded-full font-medium transition-all ${activeFilter === status
-                                ? 'bg-emerald-600 text-white shadow-lg'
+                                ? 'bg-emerald-700 text-white shadow-lg'
                                 : 'bg-white text-gray-600 hover:bg-emerald-50 border border-gray-100'
                                 }`}
                         >
@@ -134,11 +134,13 @@ export function InitiativesPage() {
                         initiatives
                             .filter(i => activeFilter === 'All' || i.status === activeFilter)
                             .map((initiative, index) => {
-                                const Icon = (LucideIcons as any)[initiative.category === 'Education' ? 'GraduationCap' :
+                                const Icon = getIcon(
+                                    initiative.category === 'Education' ? 'GraduationCap' :
                                     initiative.category === 'Health' ? 'Stethoscope' :
-                                        initiative.category === 'Governance' ? 'UserCheck' :
-                                            initiative.category === 'Economic Growth' ? 'Briefcase' :
-                                                initiative.category === 'Social Welfare' ? 'Heart' : 'Target'] || LucideIcons.HelpCircle;
+                                    initiative.category === 'Governance' ? 'Target' :
+                                    initiative.category === 'Economic Growth' ? 'TrendingUp' :
+                                    initiative.category === 'Social Welfare' ? 'Heart' : 'Target'
+                                );
                                 return (
                                     <motion.div
                                         key={initiative.id}
@@ -186,7 +188,7 @@ export function InitiativesPage() {
                         <div className="col-span-full py-32 bg-white rounded-3xl border border-gray-100 shadow-sm flex items-center justify-center">
                             <div className="text-center max-w-md mx-auto px-4">
                                 <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <LucideIcons.SearchX className="w-8 h-8 text-gray-400" />
+                                    <SearchX className="w-8 h-8 text-gray-400" />
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-2">No {activeFilter} initiatives yet</h3>
                                 <p className="text-gray-500">

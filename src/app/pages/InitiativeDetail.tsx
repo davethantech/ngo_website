@@ -116,7 +116,7 @@ export function InitiativeDetail() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
                         >
-                            <span className="inline-block px-4 py-1 bg-emerald-600/80 backdrop-blur-sm rounded-full text-sm font-medium mb-4">
+                            <span className="inline-block px-4 py-1 bg-emerald-700/80 backdrop-blur-sm rounded-full text-sm font-medium mb-4">
                                 {initiative.category || 'Initiative'}
                             </span>
                             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">

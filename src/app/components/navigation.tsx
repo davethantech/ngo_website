@@ -39,6 +39,7 @@ export function Navigation() {
         { label: 'Blog', href: '/#blog', type: 'hash' },
         { label: 'Careers', href: '/careers', type: 'route' },
         { label: 'FAQ', href: '/faq', type: 'route' },
+        { label: 'Register', href: '/register', type: 'route' },
         { label: 'Contact', href: '/#contact', type: 'hash' },
     ];
 
@@ -118,7 +119,7 @@ export function Navigation() {
                             ))}
                             <Link
                                 to="/volunteer"
-                                className="px-6 py-2.5 bg-emerald-600 text-white rounded-full font-medium hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-xl inline-block"
+                                className="px-6 py-2.5 bg-emerald-700 text-white rounded-full font-medium hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-xl inline-block"
                             >
                                 Donate Now
                             </Link>
@@ -159,7 +160,7 @@ export function Navigation() {
                             <Link
                                 to="/volunteer"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="px-8 py-3 bg-emerald-600 text-white rounded-full font-medium text-lg hover:bg-emerald-700 transition-colors shadow-lg text-center"
+                                className="px-8 py-3 bg-emerald-700 text-white rounded-full font-medium text-lg hover:bg-emerald-700 transition-colors shadow-lg text-center"
                             >
                                 Donate Now
                             </Link>

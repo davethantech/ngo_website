@@ -548,7 +548,7 @@ export function Settings() {
                                                         <button
                                                             onClick={handleSaveEmailConfig}
                                                             disabled={savingEmail}
-                                                            className="flex items-center justify-center gap-3 px-8 py-4 bg-emerald-600 hover:bg-emerald-500 rounded-2xl text-white text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-50 transition-all active:scale-[0.98] shadow-lg shadow-emerald-500/20"
+                                                            className="flex items-center justify-center gap-3 px-8 py-4 bg-emerald-700 hover:bg-emerald-500 rounded-2xl text-white text-[10px] font-black uppercase tracking-[0.2em] disabled:opacity-50 transition-all active:scale-[0.98] shadow-lg shadow-emerald-500/20"
                                                         >
                                                             {savingEmail ? <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" /> : <Save className="w-4 h-4" />}
                                                             Sync Pipeline

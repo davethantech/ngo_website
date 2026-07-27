@@ -25,7 +25,7 @@ export function ConfirmationModal({
     const colors: Record<string, string> = {
         danger: 'bg-red-500 hover:bg-red-600 border-red-500/50 text-white',
         warning: 'bg-amber-500 hover:bg-amber-600 border-amber-500/50 text-white',
-        info: 'bg-emerald-500 hover:bg-emerald-600 border-emerald-500/50 text-white',
+        info: 'bg-emerald-500 hover:bg-emerald-700 border-emerald-500/50 text-white',
     };
 
     const iconColors: Record<string, string> = {

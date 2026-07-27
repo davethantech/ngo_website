@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { ArrowRight, HelpCircle } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
+import { getIcon } from '../lib/icons';
 import { Link } from 'react-router-dom';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import heroBg from '../../assets/hero-bg.webp';
@@ -90,7 +90,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="inline-block px-4 py-2 bg-emerald-600/20 backdrop-blur-sm border border-emerald-500/30 rounded-full mb-4"
+              className="inline-block px-4 py-2 bg-emerald-700/20 backdrop-blur-sm border border-emerald-500/30 rounded-full mb-4"
             >
               <span className="text-emerald-400 font-medium text-sm">
                 Making a Difference Since 2015
@@ -128,16 +128,16 @@ export function Hero() {
             >
               <Link
                 to="/volunteer"
-                className="group px-8 py-4 bg-emerald-600 text-white rounded-full font-semibold hover:bg-emerald-700 transition-all shadow-xl hover:shadow-2xl flex items-center gap-2 whitespace-nowrap"
+                className="group px-8 py-4 bg-emerald-700 text-white rounded-full font-semibold hover:bg-emerald-700 transition-all shadow-xl hover:shadow-2xl flex items-center gap-2 whitespace-nowrap"
               >
-                Get Involved
+                <span aria-label="Get Involved in our initiatives" title="Get Involved in our initiatives">Get Involved</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 to="/#about"
                 className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-full font-semibold hover:bg-white/20 transition-all border border-white/20 whitespace-nowrap"
               >
-                Learn More
+                <span aria-label="Learn More about our initiatives" title="Learn More about our initiatives">Learn More</span>
               </Link>
             </motion.div>
           </div>
@@ -155,7 +155,7 @@ export function Hero() {
                 <div key={i} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 animate-pulse h-[100px]" />
               ))
             ) : metrics.map((item, index) => {
-              const Icon = (LucideIcons as any)[item.icon_name] || HelpCircle;
+              const Icon = getIcon(item.icon_name);
               const colors = ['emerald', 'teal', 'cyan'];
               const color = colors[index % colors.length];
 

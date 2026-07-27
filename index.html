@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+  <meta charset="utf-8" />
   <meta name="description"
     content="Layeni Ogunmakinwa Foundation (L.O.F) - Dedicated to empowering underprivileged communities through education, healthcare, and sustainable development initiatives in Nigeria and the USA." />
   <meta name="keywords"
@@ -27,11 +28,15 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap"
-    rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" />
+  </noscript>
   <title>Layeni Ogunmakinwa Foundation | Empowering Communities</title>
   <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
+  <!-- Preload the hero image to improve LCP -->
+  <link rel="preload" as="image" href="/src/assets/hero-bg.webp" type="image/webp" />
 </head>
 
 <body>

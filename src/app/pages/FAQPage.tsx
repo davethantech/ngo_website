@@ -78,7 +78,7 @@ function FAQItem({ question, answer, category, index, isOpen, onToggle }: { ques
                         {question}
                     </p>
                 </div>
-                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 mt-1 ${isOpen ? 'bg-emerald-600 text-white rotate-180' : 'bg-gray-100 text-gray-500 group-hover:bg-emerald-50 group-hover:text-emerald-600'}`}>
+                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 mt-1 ${isOpen ? 'bg-emerald-700 text-white rotate-180' : 'bg-gray-100 text-gray-500 group-hover:bg-emerald-50 group-hover:text-emerald-600'}`}>
                     <ChevronDown className="w-4 h-4 transition-transform duration-300" />
                 </div>
             </button>

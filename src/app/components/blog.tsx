@@ -161,7 +161,7 @@ export function Blog() {
         >
           <Link
             to="/blog"
-            className="inline-block px-8 py-4 bg-emerald-600 text-white rounded-full font-semibold hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-xl"
+            className="inline-block px-8 py-4 bg-emerald-700 text-white rounded-full font-semibold hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-xl"
           >
             View All Posts
           </Link>

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useInView } from './hooks/use-in-view';
-import { ArrowRight } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
+import { ArrowRight, Heart } from 'lucide-react';
+import { getIcon } from '../lib/icons';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
@@ -70,11 +70,9 @@ export function Initiatives() {
     fetchInitiatives();
   }, []);
 
-  const getIcon = (index: number) => {
-    const icons = ['GraduationCap', 'Heart', 'Droplet', 'Users'];
-    const iconName = icons[index % icons.length];
-    const Icon = (LucideIcons as any)[iconName] || LucideIcons.HelpCircle;
-    return Icon;
+  const getIconByIndex = (index: number) => {
+    const icons = ['GraduationCap', 'Heart', 'Droplets', 'Users'];
+    return getIcon(icons[index % icons.length]);
   };
 
   return (
@@ -107,7 +105,7 @@ export function Initiatives() {
             ))
           ) : initiatives.length > 0 ? (
             initiatives.map((initiative, index) => {
-              const Icon = getIcon(index);
+              const Icon = getIconByIndex(index);
               return (
                 <motion.div
                   key={initiative.id}
@@ -132,7 +130,7 @@ export function Initiatives() {
 
                     {/* Impact Badge */}
                     {initiative.impact && (
-                      <div className="absolute bottom-4 right-4 px-4 py-2 bg-emerald-600 text-white rounded-full text-sm font-semibold shadow-lg">
+                      <div className="absolute bottom-4 right-4 px-4 py-2 bg-emerald-700 text-white rounded-full text-sm font-semibold shadow-lg">
                         {initiative.impact}
                       </div>
                     )}
@@ -161,7 +159,7 @@ export function Initiatives() {
             <div className="col-span-full py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200 flex flex-center">
               <div className="text-center max-w-md mx-auto px-4">
                 <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <LucideIcons.Heart className="w-10 h-10 text-emerald-600 animate-pulse" />
+                  <Heart className="w-10 h-10 text-emerald-600 animate-pulse" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">New Initiatives Coming Soon</h3>
                 <p className="text-gray-600">
@@ -175,7 +173,7 @@ export function Initiatives() {
         <div className="text-center">
           <Link
             to="/initiatives"
-            className="inline-block px-8 py-4 bg-emerald-600 text-white rounded-full font-semibold hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-xl"
+            className="inline-block px-8 py-4 bg-emerald-700 text-white rounded-full font-semibold hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-xl"
           >
             View All Initiatives
           </Link>

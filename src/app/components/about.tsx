@@ -73,7 +73,7 @@ export function About() {
               <div className="absolute inset-0 bg-black/5" />
             </div>
             {/* Decorative element */}
-            <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-emerald-600 rounded-2xl -z-10" />
+            <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-emerald-700 rounded-2xl -z-10" />
             <div className="absolute -top-6 -left-6 w-32 h-32 bg-amber-400 rounded-full -z-10" />
           </motion.div>
 

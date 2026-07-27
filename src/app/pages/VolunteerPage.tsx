@@ -100,7 +100,7 @@ export function VolunteerPage() {
                         animate={{ opacity: 1, scale: 1 }}
                         className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100"
                     >
-                        <div className="bg-emerald-600 px-8 py-6 text-white text-center">
+                        <div className="bg-emerald-700 px-8 py-6 text-white text-center">
                             <h2 className="text-2xl font-bold">Volunteer Application Form</h2>
                             <p className="text-emerald-100">Please fill out the form below and we will get back to you soon.</p>
                         </div>
